@@ -1,17 +1,25 @@
-import { View, TextInput, Alert } from "react-native";
+import { View, TextInput, Alert, Keyboard } from "react-native";
 import CustomButton from "./CustomButton";
 import { useWindowDimensions } from "react-native";
-import { useState } from "react";
+import { useRef } from "react";
 
-const SearchHeader = ()=> {
+const SearchHeader = ({color, value, onChangeText, onSearch})=> {
     const windowWidth = useWindowDimensions().width;
-     const [text, setText] = useState('');
+     const inputRef = useRef(null);
+
+     const HandleSearch = () => {
+      Keyboard.dismiss();
+      inputRef.current.blur();
+        if(onSearch) {
+          onSearch();
+        }
+          }
     return (
       <View
         style={{
           flexDirection: "row",
           height: 250,
-          backgroundColor: "greenyellow",
+          backgroundColor: color,
           marginBottom: 20,
           borderRadius: 45,
           marginHorizontal: 15,
@@ -21,6 +29,7 @@ const SearchHeader = ()=> {
       >
         <TextInput
           placeholder="Search Pokemon"
+          ref={inputRef}
           style={{
             backgroundColor: "white",
             width: 0.65 * windowWidth,
@@ -28,16 +37,15 @@ const SearchHeader = ()=> {
             paddingLeft: 10,
             fontSize: 20,
           }}
+          onSubmitEditing={HandleSearch}
+          returnKeyType="search"
           placeholderTextColor={"black"}
-          onChangeText={(newText) => setText(newText)}
-          value={text}
+          onChangeText={onChangeText}
+          value={value}
         />
         <CustomButton
           title={"Search"}
-          onPress={() => {
-            Alert.alert(text);
-            setText('');
-          }}
+          onPress={HandleSearch}
         />
       </View>
     );
