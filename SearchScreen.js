@@ -5,6 +5,8 @@ import { useCallback, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SearchHeader from "./components/SearchHeader";
 import PokemonCard from "./components/PokemonCard";
+import { usePokedex } from "./services/usePokedex";
+import { useGlobalPokedex } from "./services/PokeDexContext";
 
 const SearchScreen = () => {
     const [text, setText] = useState('');
@@ -14,12 +16,21 @@ const SearchScreen = () => {
     const backgroundImage = require('./assets/background.jpeg');
     const renderData = data=> {
         setData([]);
+        let filtered;
         // console.log('render called');
         // console.log(data);
         // console.log(text.toLowerCase());
-        const filtered = data.filter(element => 
-            element.pokemon_species.name.includes(text.toLowerCase())
-        )
+        // console.log(Number(text), typeof Number(text));
+        if(Number(text)<152 && Number(text)>0){
+            filtered = data.filter(element => 
+                element.entry_number===Number(text)
+            )
+        }
+        else {
+            filtered = data.filter(element => 
+                element.pokemon_species.name.includes(text.toLowerCase())
+            )
+        }
         if(filtered.length > 0) {
             setData(filtered);
         }
@@ -65,34 +76,51 @@ const SearchScreen = () => {
             }
         },[])
     )
+    const {capturedData, encounteredData, handleButtons} = useGlobalPokedex();
 
-    return(
-        <ImageBackground source={backgroundImage}resizeMode="cover" style={{flex: 1}}>
-        <SafeAreaView style={{flex: 1}}>
-        <StatusBar barStyle={'light-content'}/>
+    return (
+      <ImageBackground
+        source={backgroundImage}
+        resizeMode="cover"
+        style={{ flex: 1 }}
+      >
+        <SafeAreaView style={{ flex: 1 }}>
+          <StatusBar barStyle={"light-content"} />
 
-        <View style={styles.container}>
-            
-        {isLoading ? (
-                <View style={{flex: 1, justifyContent: 'center'}}>
-                    <ActivityIndicator size={100}/>
-                </View>
-            ): (
-                <FlatList
+          <View style={styles.container}>
+            {isLoading ? (
+              <View style={{ flex: 1, justifyContent: "center" }}>
+                <ActivityIndicator size={100} />
+              </View>
+            ) : (
+              <FlatList
                 data={data}
-                ListHeaderComponent={ 
-        <SearchHeader color={'orange'} onChangeText={setText} value={text} onSearch={onSearch} text={searchTerm}/>
-                
+                ListHeaderComponent={
+                  <SearchHeader
+                    color={"orange"}
+                    onChangeText={setText}
+                    value={text}
+                    onSearch={onSearch}
+                    text={searchTerm}
+                  />
                 }
-                keyboardShouldPersistTaps='always'
-                renderItem={({item})=> <PokemonCard item={item}/>}
-                showsHorizontalScrollIndicator= {false}
-                />
+                keyboardShouldPersistTaps="always"
+                renderItem={({ item }) => (
+                  <PokemonCard
+                    item={item}
+                    key={item.entry_number}
+                    buttonHandler={handleButtons}
+                    isCaptured={capturedData.includes(item.entry_number)}
+                    isEncountered={encounteredData.includes(item.entry_number)}
+                  />
+                )}
+                showsHorizontalScrollIndicator={false}
+              />
             )}
-        </View>
+          </View>
         </SafeAreaView>
-        </ImageBackground>
-    )
+      </ImageBackground>
+    );
 }
 
 

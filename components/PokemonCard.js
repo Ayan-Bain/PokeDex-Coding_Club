@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Image, ActivityIndicator, Modal, TouchableOpaci
 import { useWindowDimensions } from "react-native";
 import { Audio } from "expo-av";
 import { playPokemonCry } from "../services/PlayPokemonCry";
+import CustomButton from "./CustomButton";
 
 // Audio.setAudioModeAsync({
 //   allowsRecordingIOS: false,
@@ -13,11 +14,10 @@ import { playPokemonCry } from "../services/PlayPokemonCry";
 //   playThroughEarpieceAndroid: false,
 // });
 
-const PokemonCard = ({item, playCry})=> {
+const PokemonCard = ({item, playCry, buttonHandler, isCaptured, isEncountered})=> {
     const [modalVisible, setModalVisibility] = useState(false);
     const windowWidth = useWindowDimensions().width;
-    const [sound, setSound] = useState();
-    const imageWidth = windowWidth - (windowWidth %100)-150;
+    const imageWidth = windowWidth - (windowWidth %100)-175;
     const [isImageLoading, setImageLoading]  =useState(true);
     const [isLoading, setLoading] = useState(true);
     const [info, setInfo] = useState('');
@@ -47,6 +47,13 @@ const PokemonCard = ({item, playCry})=> {
           playPokemonCry(info.cries.latest)
         }
       },[modalVisible])
+      if(!fontsLoaded) {
+        return(
+          <View>
+            <ActivityIndicator size={100}/>
+          </View>
+        )
+      } 
     return (
       <View style={styles.wrapper}>
         <TouchableOpacity
@@ -70,14 +77,16 @@ const PokemonCard = ({item, playCry})=> {
                 fontFamily: "Playfair",
                 fontSize: 35,
                 textAlign: "center",
-                textDecorationLine: 'underline'
+                textDecorationLine: "underline",
               }}
             >
               {item.pokemon_species.name.toUpperCase()}
             </Text>
             {info !== "" ? (
               <Image
-                source={{ uri: info.sprites.other['official-artwork'].front_default }}
+                source={{
+                  uri: info.sprites.other["official-artwork"].front_default,
+                }}
                 onLoadStart={() => setImageLoading(true)}
                 onLoadEnd={() => setImageLoading(false)}
                 style={{
@@ -90,6 +99,11 @@ const PokemonCard = ({item, playCry})=> {
               <ActivityIndicator size={100} />
             )}
             {/* <Text>This is one Pokemon card of </Text> */}
+            <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 65}}>
+            <View style={{flex: 0.8}}></View>
+            <CustomButton title={isCaptured?'Release':'Captured'} backgroundColor={isCaptured?'red': 'blue'} onPress={()=> buttonHandler('setCaptured', item.entry_number)}/>
+            <CustomButton title={!isEncountered?'Encountered':'Forgot'} backgroundColor={!isEncountered ? 'green': 'orange'} onPress={()=> buttonHandler('setEncountered', item.entry_number)}/>
+            </View>
           </View>
         </TouchableOpacity>
 
@@ -109,7 +123,9 @@ const PokemonCard = ({item, playCry})=> {
             <View style={styles.contentContainer}>
               {info !== "" ? (
                 <Image
-                  source={{ uri: info.sprites.other['official-artwork'].front_default }}
+                  source={{
+                    uri: info.sprites.other["official-artwork"].front_default,
+                  }}
                   onLoadStart={() => setImageLoading(true)}
                   onLoadEnd={() => setImageLoading(false)}
                   style={{

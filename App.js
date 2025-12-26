@@ -1,10 +1,11 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet} from 'react-native';
 import { useState } from 'react';
 //import { useEffect } from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import { PokedexProvider } from './services/PokeDexContext';
 import HomeScreen from './HomeScreen';
 import SearchScreen from './SearchScreen';
 import CapturedScreen from './CapturedScreen';
@@ -33,6 +34,8 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
+    <PokedexProvider>
+
     <NavigationContainer>
       <Tab.Navigator initialRouteName='Home' backBehavior='initialRoute' screenOptions={{
         headerShown: false,
@@ -54,6 +57,7 @@ export default function App() {
     }}/>
       </Tab.Navigator>
     </NavigationContainer>
+    </PokedexProvider>
     </SafeAreaProvider>
   );
 }
