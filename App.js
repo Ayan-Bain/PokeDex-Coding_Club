@@ -1,4 +1,3 @@
-import { StatusBar } from 'react-native';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { useState } from 'react';
 //import { useEffect } from 'react';
@@ -34,7 +33,6 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-    <StatusBar barStyle={'dark-content'}/>
     <NavigationContainer>
       <Tab.Navigator initialRouteName='Home' backBehavior='initialRoute' screenOptions={{
         headerShown: false,

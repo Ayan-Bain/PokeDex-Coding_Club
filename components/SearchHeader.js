@@ -1,12 +1,17 @@
-import { View, TextInput, Alert, Keyboard } from "react-native";
+import { View, TextInput, Keyboard, Text, ActivityIndicator } from "react-native";
 import CustomButton from "./CustomButton";
 import { useWindowDimensions } from "react-native";
 import { useRef } from "react";
+import { useFonts } from "expo-font";
 
-const SearchHeader = ({color, value, onChangeText, onSearch})=> {
+
+const SearchHeader = ({color, value, onChangeText, onSearch, text})=> {
     const windowWidth = useWindowDimensions().width;
-     const inputRef = useRef(null);
-
+    const [fontsLoaded] = useFonts({
+      'Playfair': require('../assets/fonts/PlayfairDisplay-BoldItalic.ttf')
+    });
+    const inputRef = useRef(null);
+      const search = (text=='') ? '' : 'Search results for: '+text;
      const HandleSearch = () => {
       Keyboard.dismiss();
       inputRef.current.blur();
@@ -14,39 +19,55 @@ const SearchHeader = ({color, value, onChangeText, onSearch})=> {
           onSearch();
         }
           }
+          if(!fontsLoaded) {
+            return(
+              <View style={{flex: 1, justifyContent: 'center'}}>
+                <ActivityIndicator size={100}/>
+              </View>
+            )
+          }
     return (
       <View
         style={{
-          flexDirection: "row",
           height: 250,
-          backgroundColor: color,
-          marginBottom: 20,
-          borderRadius: 45,
-          marginHorizontal: 15,
-          alignItems: "center",
-          justifyContent: "space-evenly",
+            backgroundColor: color,
+            marginBottom: 20,
+            borderRadius: 45,
+            marginHorizontal: 15,
+            justifyContent: 'center'
         }}
       >
-        <TextInput
-          placeholder="Search Pokemon"
-          ref={inputRef}
+        <View
           style={{
-            backgroundColor: "white",
-            width: 0.65 * windowWidth,
-            borderRadius: 15,
-            paddingLeft: 10,
-            fontSize: 20,
+            flexDirection: "row",
+            flex: 0.7,
+            alignItems: "center",
+            justifyContent: "space-evenly",
           }}
-          onSubmitEditing={HandleSearch}
-          returnKeyType="search"
-          placeholderTextColor={"black"}
-          onChangeText={onChangeText}
-          value={value}
-        />
-        <CustomButton
-          title={"Search"}
-          onPress={HandleSearch}
-        />
+        >
+          <TextInput
+            placeholder="Search Pokemon"
+            ref={inputRef}
+            style={{
+              backgroundColor: "white",
+              width: 0.65 * windowWidth,
+              borderRadius: 15,
+              paddingLeft: 10,
+              fontSize: 20,
+            }}
+            onSubmitEditing={HandleSearch}
+            returnKeyType="search"
+            placeholderTextColor={"black"}
+            onChangeText={onChangeText}
+            value={value}
+          />
+          <CustomButton title={"Search"} onPress={HandleSearch} />
+        </View>
+        <Text style={{
+          paddingLeft: 20,
+          fontFamily: 'Playfair',
+          fontSize: 26
+        }}>{search}</Text>
       </View>
     );
 }

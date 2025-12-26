@@ -1,6 +1,7 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, FlatList, TextInput, StyleSheet, ImageBackground, StatusBar, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SearchHeader from "./components/SearchHeader";
 import PokemonCard from "./components/PokemonCard";
@@ -9,15 +10,22 @@ const SearchScreen = () => {
     const [text, setText] = useState('');
     const [isLoading, setLoading] = useState(false);
     const [data, setData] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const backgroundImage = require('./assets/background.jpeg');
     const renderData = data=> {
-        console.log('render called');
+        setData([]);
+        // console.log('render called');
         // console.log(data);
-        console.log(text.toLowerCase());
+        // console.log(text.toLowerCase());
         const filtered = data.filter(element => 
             element.pokemon_species.name.includes(text.toLowerCase())
         )
-        setData(filtered);
+        if(filtered.length > 0) {
+            setData(filtered);
+        }
+        else {
+            Alert.alert('No results found');
+        }
     }
     const Search = async ()=>{
         try{
@@ -31,13 +39,33 @@ const SearchScreen = () => {
         catch (e) {
             console.error(e);
         } 
-        console.log('After try catch block')
+        // console.log('After try catch block')
         setLoading(false);
     }
     const onSearch = ()=> {
-        Search();
-        setText('');
+        if(text==='') {
+            Alert.alert('Field cannot be empty');
+            setSearchTerm('');
+        }
+        else {
+            setSearchTerm(text);
+            Search();
+            setText('');
+        }
     }
+    useFocusEffect(
+        useCallback(()=> {
+
+
+            return()=> {
+                console.log('Cleanup Search Screen');
+                setData([]);
+                setText('');
+                setSearchTerm('');
+            }
+        },[])
+    )
+
     return(
         <ImageBackground source={backgroundImage}resizeMode="cover" style={{flex: 1}}>
         <SafeAreaView style={{flex: 1}}>
@@ -45,7 +73,6 @@ const SearchScreen = () => {
 
         <View style={styles.container}>
             
-        <SearchHeader color={'orange'} onChangeText={setText} value={text} onSearch={onSearch}/>
         {isLoading ? (
                 <View style={{flex: 1, justifyContent: 'center'}}>
                     <ActivityIndicator size={100}/>
@@ -53,6 +80,10 @@ const SearchScreen = () => {
             ): (
                 <FlatList
                 data={data}
+                ListHeaderComponent={ 
+        <SearchHeader color={'orange'} onChangeText={setText} value={text} onSearch={onSearch} text={searchTerm}/>
+                
+                }
                 keyboardShouldPersistTaps='always'
                 renderItem={({item})=> <PokemonCard item={item}/>}
                 showsHorizontalScrollIndicator= {false}

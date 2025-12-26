@@ -10,7 +10,8 @@ import PokemonCard from "./components/PokemonCard";
 const HomeScreen = ()=> {
     const kantoPokedex = 'https://pokeapi.co/api/v2/pokedex/kanto';
    const [fontsLoaded] = useFonts({
-    'Pacifico' : require('./assets/fonts/Pacifico-Regular.ttf')
+    'Pacifico' : require('./assets/fonts/Pacifico-Regular.ttf'),
+    'Rubik': require('./assets/fonts/RubikGemstones-Regular.ttf')
    })
     // useEffect(()=> {
 
@@ -77,7 +78,7 @@ const HomeScreen = ()=> {
                   borderRadius: 30,
                   margin: 20
                 }}>
-                  <Text style={{textAlign: 'center', alignSelf :'center', fontSize: 100, color: 'yellow', fontFamily: 'Pacifico'}}>PokeDex</Text>
+                  <Text style={{textAlign: 'center', alignSelf :'center',fontSize: 90, color: 'yellow', fontFamily: 'Rubik'}}>PokéDex</Text>
                 </View>}
                 keyboardShouldPersistTaps='always'
                 renderItem={({item})=> <PokemonCard item={item}/>}

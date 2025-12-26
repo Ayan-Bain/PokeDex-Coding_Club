@@ -2,24 +2,36 @@ import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, ActivityIndicator, Modal, TouchableOpacity } from "react-native";
 import { useWindowDimensions } from "react-native";
+import { Audio } from "expo-av";
+import { playPokemonCry } from "../services/PlayPokemonCry";
 
-const PokemonCard = ({item})=> {
+// Audio.setAudioModeAsync({
+//   allowsRecordingIOS: false,
+//   staysActiveInBackground: false,
+//   playsInSilentModeIOS: true, // This is the most important line
+//   shouldDuckAndroid: true,
+//   playThroughEarpieceAndroid: false,
+// });
+
+const PokemonCard = ({item, playCry})=> {
     const [modalVisible, setModalVisibility] = useState(false);
     const windowWidth = useWindowDimensions().width;
+    const [sound, setSound] = useState();
     const imageWidth = windowWidth - (windowWidth %100)-150;
     const [isImageLoading, setImageLoading]  =useState(true);
     const [isLoading, setLoading] = useState(true);
-    const [imgUrl, setImgUrl] = useState('');
+    const [info, setInfo] = useState('');
     const [fontsLoaded] = useFonts({
         'Playfair': require('../assets/fonts/PlayfairDisplay-BoldItalic.ttf')
     })
+
     const getUrl = async (API_URL) => {
         setLoading(true);
         try {
           const response = await fetch(API_URL);
           const json = await response.json();
         //   console.log(json.sprites.other.home.front_default);
-          setImgUrl(json.sprites.other['official-artwork'].front_default);
+          setInfo(json);
         } catch (error) {
           console.error(error);
         } finally {
@@ -30,6 +42,11 @@ const PokemonCard = ({item})=> {
       useEffect(()=>{
         getUrl('https://pokeapi.co/api/v2/pokemon/'+item.pokemon_species.name);
       },[]);
+      useEffect(()=> {
+        if(modalVisible && info?.cries?.latest) {
+          playPokemonCry(info.cries.latest)
+        }
+      },[modalVisible])
     return (
       <View style={styles.wrapper}>
         <TouchableOpacity
@@ -58,9 +75,9 @@ const PokemonCard = ({item})=> {
             >
               {item.pokemon_species.name.toUpperCase()}
             </Text>
-            {imgUrl !== "" ? (
+            {info !== "" ? (
               <Image
-                source={{ uri: imgUrl }}
+                source={{ uri: info.sprites.other['official-artwork'].front_default }}
                 onLoadStart={() => setImageLoading(true)}
                 onLoadEnd={() => setImageLoading(false)}
                 style={{
@@ -90,9 +107,9 @@ const PokemonCard = ({item})=> {
               }}
             ></TouchableOpacity>
             <View style={styles.contentContainer}>
-              {imgUrl !== "" ? (
+              {info !== "" ? (
                 <Image
-                  source={{ uri: imgUrl }}
+                  source={{ uri: info.sprites.other['official-artwork'].front_default }}
                   onLoadStart={() => setImageLoading(true)}
                   onLoadEnd={() => setImageLoading(false)}
                   style={{
