@@ -1,13 +1,61 @@
-import React, { createContext, useContext } from 'react';
-import { usePokedex } from './usePokedex'; // Import your current hook
+// services/PokeDexContext.js
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usePokedex } from './usePokedex';
 
+const KANTO_POKEDEX_URL = 'https://pokeapi.co/api/v2/pokedex/kanto';
 const PokedexContext = createContext();
 
 export const PokedexProvider = ({ children }) => {
     const pokedex = usePokedex(); 
-    
+    const [pokeData, setPokeData] = useState([]); // Master list
+    const [isListLoading, setListLoading] = useState(true);
+    const [pokemonTypesMap, setPokemonTypesMap] = useState({});
+
+    const fetchPokedexList = async () => {
+        setListLoading(true);
+        try {
+            const cached = await AsyncStorage.getItem("full_pokemon_data");
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                setPokeData(parsed);
+                // Pre-sync the types map
+                const typesMap = {};
+                parsed.forEach(p => { if (p.types) typesMap[p.entry_number] = p.types; });
+                setPokemonTypesMap(typesMap);
+            } else {
+                const res = await fetch(KANTO_POKEDEX_URL);
+                const json = await res.json();
+                
+                // Deep fetch images/types in parallel
+                const detailed = await Promise.all(json.pokemon_entries.map(async (p) => {
+                    const detailRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${p.pokemon_species.name}`);
+                    const detailJson = await detailRes.json();
+                    return {
+                        ...p,
+                        imageUrl: detailJson.sprites.other["official-artwork"].front_default,
+                        types: detailJson.types.map(t => t.type.name),
+                        cries: detailJson.cries
+                    };
+                }));
+
+                setPokeData(detailed);
+                console.log('Deep fetch successfull');
+                await AsyncStorage.setItem('full_pokemon_data', JSON.stringify(detailed));
+            }
+        } catch (e) { console.error(e); }
+        finally { setListLoading(false); }
+    };
+
+    useEffect(() => { fetchPokedexList(); }, []);
+
     return (
-        <PokedexContext.Provider value={pokedex}>
+        <PokedexContext.Provider value={{ 
+            ...pokedex, 
+            pokeData, 
+            isListLoading, 
+            pokemonTypesMap 
+        }}>
             {children}
         </PokedexContext.Provider>
     );

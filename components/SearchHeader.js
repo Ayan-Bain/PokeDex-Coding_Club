@@ -46,14 +46,14 @@ const SearchHeader = ({color, value, onChangeText, onSearch, text})=> {
           }}
         >
           <TextInput
-            placeholder="Search Pokemon"
+            placeholder="Search Pokemon by ID or Name"
             ref={inputRef}
             style={{
               backgroundColor: "white",
               width: 0.65 * windowWidth,
               borderRadius: 15,
               paddingLeft: 10,
-              fontSize: 20,
+              fontSize: 18,
             }}
             onSubmitEditing={HandleSearch}
             returnKeyType="search"

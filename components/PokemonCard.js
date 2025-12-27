@@ -6,6 +6,7 @@ import { Audio } from "expo-av";
 import { playPokemonCry } from "../services/PlayPokemonCry";
 import CustomButton from "./CustomButton";
 
+
 // Audio.setAudioModeAsync({
 //   allowsRecordingIOS: false,
 //   staysActiveInBackground: false,
@@ -14,37 +15,18 @@ import CustomButton from "./CustomButton";
 //   playThroughEarpieceAndroid: false,
 // });
 
-const PokemonCard = ({item, playCry, buttonHandler, isCaptured, isEncountered})=> {
+const PokemonCard = ({item, playCry, buttonHandler, isCaptured, isEncountered, saveTypes})=> {
     const [modalVisible, setModalVisibility] = useState(false);
     const windowWidth = useWindowDimensions().width;
     const imageWidth = windowWidth - (windowWidth %100)-175;
     const [isImageLoading, setImageLoading]  =useState(true);
-    const [isLoading, setLoading] = useState(true);
-    const [info, setInfo] = useState('');
     const [fontsLoaded] = useFonts({
         'Playfair': require('../assets/fonts/PlayfairDisplay-BoldItalic.ttf')
     })
 
-    const getUrl = async (API_URL) => {
-        setLoading(true);
-        try {
-          const response = await fetch(API_URL);
-          const json = await response.json();
-        //   console.log(json.sprites.other.home.front_default);
-          setInfo(json);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      useEffect(()=>{
-        getUrl('https://pokeapi.co/api/v2/pokemon/'+item.pokemon_species.name);
-      },[]);
       useEffect(()=> {
-        if(modalVisible && info?.cries?.latest) {
-          playPokemonCry(info.cries.latest)
+        if(modalVisible && item?.cries?.latest) {
+          playPokemonCry(item.cries.latest)
         }
       },[modalVisible])
       if(!fontsLoaded) {
@@ -54,6 +36,16 @@ const PokemonCard = ({item, playCry, buttonHandler, isCaptured, isEncountered})=
           </View>
         )
       } 
+// if(isLoading) {
+//   return (
+//     <View style={{flex: 1, justifyContent: 'center'}}>
+//       <ActivityIndicator size={100}/>
+//     </View>
+//   )
+// }
+
+  console.log(item);
+
     return (
       <View style={styles.wrapper}>
         <TouchableOpacity
@@ -82,10 +74,10 @@ const PokemonCard = ({item, playCry, buttonHandler, isCaptured, isEncountered})=
             >
               {item.pokemon_species.name.toUpperCase()}
             </Text>
-            {info !== "" ? (
+            {item !== "" ? (
               <Image
                 source={{
-                  uri: info.sprites.other["official-artwork"].front_default,
+                  uri: item.imageUrl,
                 }}
                 onLoadStart={() => setImageLoading(true)}
                 onLoadEnd={() => setImageLoading(false)}
@@ -121,10 +113,10 @@ const PokemonCard = ({item, playCry, buttonHandler, isCaptured, isEncountered})=
               }}
             ></TouchableOpacity>
             <View style={styles.contentContainer}>
-              {info !== "" ? (
+              {item !== "" ? (
                 <Image
                   source={{
-                    uri: info.sprites.other["official-artwork"].front_default,
+                    uri: item.imageUrl,
                   }}
                   onLoadStart={() => setImageLoading(true)}
                   onLoadEnd={() => setImageLoading(false)}

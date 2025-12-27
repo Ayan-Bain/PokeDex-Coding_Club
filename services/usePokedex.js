@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const usePokedex = () => {
     const isMounted = useRef(false);
+    
     const [isLoading, setLoading] = useState(true);
     const [capturedData, setCapturedData] = useState([]);
     const [encounteredData, setEncounteredData] = useState([]);
