@@ -3,8 +3,8 @@ import { View, Text, FlatList, ActivityIndicator, StatusBar, StyleSheet, Touchab
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
-import PokemonCard from "./components/PokemonCard";
-import { useGlobalPokedex } from "./services/PokeDexContext";
+import PokemonCard from "../components/PokemonCard";
+import { useGlobalPokedex } from "../services/PokeDexContext";
 import { Dropdown } from "react-native-element-dropdown";
 
 
@@ -26,9 +26,9 @@ const HomeScreen = () => {
       value: type
     }));
     const [fontsLoaded] = useFonts({
-        'Pacifico': require('./assets/fonts/Pacifico-Regular.ttf'),
-        'Rubik': require('./assets/fonts/RubikGemstones-Regular.ttf'),
-        'Saira' : require('./assets/fonts/Saira_Condensed-Italic.ttf')
+        'Pacifico': require('../assets/fonts/Pacifico-Regular.ttf'),
+        'Rubik': require('../assets/fonts/RubikGemstones-Regular.ttf'),
+        'Saira' : require('../assets/fonts/Saira_Condensed-Italic.ttf')
     });
 
 

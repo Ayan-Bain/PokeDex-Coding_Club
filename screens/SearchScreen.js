@@ -2,9 +2,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, FlatList, TextInput, StyleSheet, ImageBackground, StatusBar, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCallback, useState, useRef } from "react";
-import SearchHeader from "./components/SearchHeader";
-import PokemonCard from "./components/PokemonCard";
-import { useGlobalPokedex } from "./services/PokeDexContext";
+import SearchHeader from "../components/SearchHeader";
+import PokemonCard from "../components/PokemonCard";
+import { useGlobalPokedex } from "../services/PokeDexContext";
 
 const SearchScreen = () => {
   const flatListRef = useRef(null);
@@ -12,7 +12,7 @@ const SearchScreen = () => {
     const [isLoading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const backgroundImage = require('./assets/background.jpg');
+    const backgroundImage = require('../assets/background.jpg');
     const {pokeData, capturedData, encounteredData, handleButtons} = useGlobalPokedex();
     const renderData = data=> {
         setData([]);

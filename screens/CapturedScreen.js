@@ -1,7 +1,7 @@
 import { View, Text, FlatList, StyleSheet, ImageBackground, useWindowDimensions, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useGlobalPokedex } from "./services/PokeDexContext";
-import PokemonCard from "./components/PokemonCard";
+import { useGlobalPokedex } from "../services/PokeDexContext";
+import PokemonCard from "../components/PokemonCard";
 import { useFonts } from "expo-font";
 
 const CapturedScreen = () => {
@@ -12,9 +12,9 @@ const CapturedScreen = () => {
     );
 
     const [fontsLoaded] = useFonts({
-        'Saira' : require('./assets/fonts/Saira_Condensed-Italic.ttf'),
-        'Bebas' : require('./assets/fonts/BebasNeue-Regular.ttf'),
-        'Quicksand' : require('./assets/fonts/Quicksand-Bold.ttf'),
+        'Saira' : require('../assets/fonts/Saira_Condensed-Italic.ttf'),
+        'Bebas' : require('../assets/fonts/BebasNeue-Regular.ttf'),
+        'Quicksand' : require('../assets/fonts/Quicksand-Bold.ttf'),
     })
 
     if (pokeData.length === 0) {
@@ -34,7 +34,7 @@ const CapturedScreen = () => {
     }
 
     return (
-        <ImageBackground source={require('./assets/backgroundCaptured.jpg')} style={{flex: 1}} resizeMode="cover">
+        <ImageBackground source={require('../assets/backgroundCaptured.jpg')} style={{flex: 1}} resizeMode="cover">
         <SafeAreaView style={styles.container}>
             <FlatList
                 data={capturedList}

@@ -5,9 +5,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { PokedexProvider } from './services/PokeDexContext';
-import HomeScreen from './HomeScreen';
-import SearchScreen from './SearchScreen';
-import CapturedScreen from './CapturedScreen';
+import HomeScreen from './screens/HomeScreen';
+import SearchScreen from './screens/SearchScreen';
+import CapturedScreen from './screens/CapturedScreen';
 
 const Tab = createBottomTabNavigator();
 
