@@ -42,14 +42,13 @@ ISC License
 
 ```
 PokeDex/
-├── src/
-│   ├── assets/
-│   │   └── fonts/
-│   ├── components/
-│   ├── screens/
-│   ├── services/
-│   └── App.js
-├── public/
+│
+├── assets/
+│   └── fonts/
+├── components/
+├── screens/
+├── services/
+├── App.js
 ├── package.json
 └── README.md
 
