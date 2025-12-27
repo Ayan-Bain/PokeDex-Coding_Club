@@ -1,4 +1,3 @@
-// services/PokeDexContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePokedex } from './usePokedex';
@@ -19,7 +18,7 @@ export const PokedexProvider = ({ children }) => {
             if (cached) {
                 const parsed = JSON.parse(cached);
                 setPokeData(parsed);
-                // Pre-sync the types map
+
                 const typesMap = {};
                 parsed.forEach(p => { if (p.types) typesMap[p.entry_number] = p.types; });
                 setPokemonTypesMap(typesMap);
@@ -27,7 +26,7 @@ export const PokedexProvider = ({ children }) => {
                 const res = await fetch(KANTO_POKEDEX_URL);
                 const json = await res.json();
                 
-                // Deep fetch images/types in parallel
+                // Deep fetch
                 const detailed = await Promise.all(json.pokemon_entries.map(async (p) => {
                     const detailRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${p.pokemon_species.name}`);
                     const detailJson = await detailRes.json();

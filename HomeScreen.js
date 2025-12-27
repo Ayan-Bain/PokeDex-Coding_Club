@@ -15,7 +15,7 @@ const POKEMON_TYPES = [
 ];
 
 const HomeScreen = () => {
-    const {pokeData, capturedData, encounteredData, handleButtons, isPokedexLoading, pokemonTypesMap, saveTypes, bulkSaveTypes, isListLoading} = useGlobalPokedex();
+    const {pokeData, capturedData, encounteredData, handleButtons, isPokedexLoading, pokemonTypesMap, saveTypes, isListLoading} = useGlobalPokedex();
     const [pokeFilter, setPokeFilter] = useState('all');
     const [selectedType, setSelectedType]  =useState('all');
 

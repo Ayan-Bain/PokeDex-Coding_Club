@@ -31,6 +31,20 @@ export const usePokedex = () => {
         setter(prev => 
             prev.includes(pokemonId) ? prev.filter(id => id !== pokemonId) : [...prev, pokemonId]
         );
+
+        if(type==='setCaptured') {
+            setCapturedData(prev => 
+            prev.includes(pokemonId) ? prev.filter(id => id !== pokemonId) : [...prev, pokemonId]
+        );
+        setEncounteredData(prev => 
+            prev.includes(pokemonId) ? prev : [...prev, pokemonId]
+        );
+    }
+    if(type==='setCaptured') {
+        setCapturedData(prev => 
+        prev.includes(pokemonId) ? prev.filter(id => id !== pokemonId) : [...prev, pokemonId]
+    );
+}
     };
 
     return { capturedData, encounteredData, handleButtons, isLoading };

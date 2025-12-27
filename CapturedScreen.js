@@ -4,14 +4,12 @@ import { useGlobalPokedex } from "./services/PokeDexContext";
 import PokemonCard from "./components/PokemonCard";
 
 const CapturedScreen = () => {
-    const { pokeData, capturedData, handleButtons } = useGlobalPokedex();
+    const { pokeData, capturedData, handleButtons, encounteredData } = useGlobalPokedex();
 
-    // 1. Filter the global list
     const capturedList = pokeData.filter(pokemon => 
         capturedData.includes(pokemon.entry_number)
     );
 
-    // 2. Prevent showing "Empty" while the app is still loading the master list
     if (pokeData.length === 0) {
         return (
             <View style={styles.center}>
@@ -29,8 +27,8 @@ const CapturedScreen = () => {
                     <PokemonCard 
                         item={item} 
                         buttonHandler={handleButtons}
-                        isCaptured={true}
-                        isEncountered={true}
+                        isCaptured={capturedData.includes(item.entry_number)}
+                        isEncountered={encounteredData.includes(item.entry_number)}
                     />
                 )}
                 ListEmptyComponent={

@@ -1,19 +1,20 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, FlatList, TextInput, StyleSheet, ImageBackground, StatusBar, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SearchHeader from "./components/SearchHeader";
 import PokemonCard from "./components/PokemonCard";
-import { usePokedex } from "./services/usePokedex";
 import { useGlobalPokedex } from "./services/PokeDexContext";
 
 const SearchScreen = () => {
+  const flatListRef = useRef(null);
     const [text, setText] = useState('');
     const [isLoading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const backgroundImage = require('./assets/background.jpeg');
+    const {pokeData, capturedData, encounteredData, handleButtons} = useGlobalPokedex();
     const renderData = data=> {
         setData([]);
         let filtered;
@@ -40,11 +41,10 @@ const SearchScreen = () => {
     }
     const Search = async ()=>{
         try{
-            const data = await AsyncStorage.getItem("pokemon_entries");
-            if (data !==null) {
+            if (pokeData !==null) {
               console.log('Data retrieved from Local storage');
             //   console.log(JSON.parse(data));
-              renderData(JSON.parse(data));
+              renderData(pokeData);
             }
         }
         catch (e) {
@@ -70,13 +70,13 @@ const SearchScreen = () => {
 
             return()=> {
                 console.log('Cleanup Search Screen');
+                flatListRef.current?.scrollToOffset({offset: 0})
                 setData([]);
                 setText('');
                 setSearchTerm('');
             }
         },[])
     )
-    const {capturedData, encounteredData, handleButtons} = useGlobalPokedex();
 
     return (
       <ImageBackground
@@ -95,6 +95,7 @@ const SearchScreen = () => {
             ) : (
               <FlatList
                 data={data}
+                ref={flatListRef}
                 ListHeaderComponent={
                   <SearchHeader
                     color={"orange"}
