@@ -1,6 +1,5 @@
 import { StyleSheet} from 'react-native';
 import { useState } from 'react';
-//import { useEffect } from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -13,7 +12,6 @@ import CapturedScreen from './CapturedScreen';
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const kantoPokedex = 'https://pokeapi.co/api/v2/pokedex/kanto';
 
   const [isLoading, setLoading] = useState(true);
 

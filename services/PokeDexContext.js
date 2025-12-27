@@ -9,7 +9,6 @@ export const PokedexProvider = ({ children }) => {
     const pokedex = usePokedex(); 
     const [pokeData, setPokeData] = useState([]); // Master list
     const [isListLoading, setListLoading] = useState(true);
-    const [pokemonTypesMap, setPokemonTypesMap] = useState({});
 
     const fetchPokedexList = async () => {
         setListLoading(true);
@@ -18,10 +17,6 @@ export const PokedexProvider = ({ children }) => {
             if (cached) {
                 const parsed = JSON.parse(cached);
                 setPokeData(parsed);
-
-                const typesMap = {};
-                parsed.forEach(p => { if (p.types) typesMap[p.entry_number] = p.types; });
-                setPokemonTypesMap(typesMap);
             } else {
                 const res = await fetch(KANTO_POKEDEX_URL);
                 const json = await res.json();
@@ -34,7 +29,11 @@ export const PokedexProvider = ({ children }) => {
                         ...p,
                         imageUrl: detailJson.sprites.other["official-artwork"].front_default,
                         types: detailJson.types.map(t => t.type.name),
-                        cries: detailJson.cries
+                        abilities: detailJson.abilities.map(t=> t.ability.name),
+                        cries: detailJson.cries,
+                        weight: detailJson.weight,
+                        height: detailJson.height,
+                        stats: detailJson.stats,
                     };
                 }));
 
@@ -52,8 +51,7 @@ export const PokedexProvider = ({ children }) => {
         <PokedexContext.Provider value={{ 
             ...pokedex, 
             pokeData, 
-            isListLoading, 
-            pokemonTypesMap 
+            isListLoading
         }}>
             {children}
         </PokedexContext.Provider>

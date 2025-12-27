@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+//This file is all about capturedData and encounteredData
+//Also for switch to filter based on captured,encountered or all
 export const usePokedex = () => {
     const isMounted = useRef(false);
     
