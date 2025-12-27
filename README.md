@@ -35,9 +35,6 @@ A simple application for browsing and managing Pokémon data.
 Launch the app and browse through the Pokémon database. Use the search feature to find specific Pokémon by name or type.
 
 
-## License
-ISC License
-
 ## Project Structure
 
 ```
