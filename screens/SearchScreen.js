@@ -1,5 +1,5 @@
 import { useFocusEffect } from "@react-navigation/native";
-import { View, Text, FlatList, TextInput, StyleSheet, ImageBackground, StatusBar, Alert } from "react-native";
+import { View, FlatList, StyleSheet, ImageBackground, StatusBar, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCallback, useState, useRef } from "react";
 import SearchHeader from "../components/SearchHeader";

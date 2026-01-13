@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { View, Text, FlatList, ActivityIndicator, StatusBar, StyleSheet, TouchableOpacity } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
 import PokemonCard from "../components/PokemonCard";
 import { useGlobalPokedex } from "../services/PokeDexContext";
 import { Dropdown } from "react-native-element-dropdown";
 
-
-const KANTO_POKEDEX_URL = 'https://pokeapi.co/api/v2/pokedex/kanto';
 
 const POKEMON_TYPES = [
   'all', 'grass', 'fire', 'water', 'bug', 'normal', 'poison', 
